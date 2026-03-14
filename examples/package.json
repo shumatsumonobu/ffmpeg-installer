@@ -1,0 +1,9 @@
+{
+  "name": "ffmpeg-examples",
+  "version": "1.0.0",
+  "author": "shumatsumonobu",
+  "license": "MIT",
+  "dependencies": {
+    "ffmpeg-stream": "^1.0.1"
+  }
+}

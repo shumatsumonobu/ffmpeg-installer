@@ -1,103 +1,129 @@
-# FFmpeg installer
+<p align="center">
+  <img src="screenshots/banner.png" alt="ffmpeg-installer" />
+</p>
 
-This is a shell script that automatically installs FFmpeg.  
-The content of the shell script follows the installation procedure (https://trac.ffmpeg.org/wiki/CompilationGuide/Centos) on the official FFmpeg page.
+<p align="center">
+  One-command FFmpeg build from source — installs x264, x265, VP9, AV1, AAC, MP3 and more on CentOS, Amazon Linux, Ubuntu and beyond.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" /></a>
+  <img src="https://img.shields.io/badge/platform-CentOS%20%7C%20Amazon%20Linux%20%7C%20Ubuntu-red.svg" alt="Platform" />
+  <img src="https://img.shields.io/badge/version-2.0.0-green.svg" alt="Version" />
+</p>
+
+## What's Inside
+
+This installer builds FFmpeg from source with the following encoders enabled:
+
+| Encoder | Format | Type |
+|---------|--------|------|
+| x264 | H.264 | Video |
+| x265 | H.265 / HEVC | Video |
+| libvpx | VP8 / VP9 | Video |
+| libaom | AV1 | Video |
+| fdk-aac | AAC | Audio |
+| LAME | MP3 | Audio |
+| Opus | Opus | Audio |
+| Vorbis | Vorbis | Audio |
+
+All libraries are built as **static** and installed to `~/ffmpeg_build`.
+The `ffmpeg` binary is installed to `~/bin`.
+
+> Based on the [official FFmpeg compilation guide for CentOS](https://trac.ffmpeg.org/wiki/CompilationGuide/Centos).
+
+## Supported Platforms
+
+| Distro | Package Manager |
+|--------|----------------|
+| CentOS / RHEL | yum |
+| Rocky / AlmaLinux / Amazon Linux / Fedora | dnf |
+| Ubuntu / Debian | apt |
+
+The installer auto-detects your OS via `/etc/os-release` and uses the correct package manager.
 
 ## Prerequisites
-Cmake 3.5 or higher is required to incorporate the AV1 encoder.  
-Therefore, if 3.5 or more cmake is not installed, 3.5 or more cmake will be reinstalled by the installation shell script (./bin/ffmpeg-installer.sh).
 
-## Installation / Uninstallation
+- One of the supported platforms above
+- cmake 3.5+ (automatically upgraded by the installer if below 3.5)
 
-### Install:
-```
-sh ./bin/ffmpeg-installer.sh;
-```
+## Quick Start
 
-### Uninstall:
-```
-sh ./bin/ffmpeg-uninstaller.sh;
+### Install
+
+```sh
+chmod +x ./bin/install.sh
+./bin/install.sh
 ```
 
-## FFmpeg command syntax
-```
-ffmpeg {Input options} -i {Input file name} {Output options} {Output file name};
-```
+<img src="screenshots/install-flow.png" alt="Install flow" width="300" />
 
-## FFmpeg command example
+### Uninstall
 
-### Convert mp4 format videos to sequential images
-
-- Output one image every second:  
-```
-ffmpeg -i input.mp4 -vf fps=1 output_%d.png;
-```
-- Output one image every minute:  
-```
-ffmpeg -i input.mp4 -vf fps=1/60 output_%04d.png
+```sh
+chmod +x ./bin/uninstall.sh
+./bin/uninstall.sh
 ```
 
-- Output one image every 10 minutes:  
+<img src="screenshots/uninstall-flow.png" alt="Uninstall flow" width="250" />
+
+## FFmpeg Command Examples
+
+### Video to Sequential Images
+
+```sh
+ffmpeg -i input.mp4 -vf fps=1 output_%04d.png
 ```
-ffmpeg -i input.mp4 -vf fps=1/600 output_%04d.png
+
+### Sequential Images to MP4
+
+```sh
+ffmpeg -framerate 1 -i input_%04d.png -vcodec libx264 -pix_fmt yuv420p -r 60 output.mp4
 ```
 
-### Convert images to mp4
+| Parameter | Description |
+|-----------|-------------|
+| `-framerate` | Input frame rate (images per second) |
+| `-r` | Output frame rate |
+| `-vcodec libx264` | H.264 encoder |
+| `-pix_fmt yuv420p` | Pixel format for broad compatibility |
 
-- When converting continuous images such as input_0001.png, input_0002.png, ... to mp4 format video:  
+### Sequential Images to GIF
 
-    |Parameter|Description|
-    |--|--|
-    |The first -r|specifies that the image is 1 fps (one image per second).|
-    |The second -r|specifies to output a video at 60 fps (60 images per second). <br>In other words, the output moving image displays the same image 60 times per second.<br>If there are 10 images ((input_0001.png to input_0010.png), a 10 second movie will be created.|
+```sh
+ffmpeg -framerate 1 -i input_%04d.png -r 60 -vf scale=512:-1 output.gif
+```
 
-    ```
-    ffmpeg -r 1 -i input_%04d.png -vcodec libx264 -pix_fmt yuv420p -r 60 output.mp4;
-    ```
+| Parameter | Description |
+|-----------|-------------|
+| `-vf scale=512:-1` | Scale width to 512px, maintain aspect ratio. Omit for original size |
 
-- When the input image is 30 fps and the output video is 60 fps:  
+## Node.js Examples
 
-    If there are 120 images (input_0001.png to image_0120.png), a 4-second movie is created.
+Using [ffmpeg-stream](https://www.npmjs.com/package/ffmpeg-stream):
 
-    ```
-    ffmpeg -r 30 -i input_%04d.png -vcodec libx264 -pix_fmt yuv420p -r 60 output.mp4;
-    ```
+```sh
+cd examples
+npm install
+node images2mp4.js
+node images2gif.js
+```
 
-- Video creation from images ~ Avoid dropping frames ~:  
+| Description | File |
+|-------------|------|
+| Images to MP4 | [examples/images2mp4.js](examples/images2mp4.js) |
+| Images to GIF | [examples/images2gif.js](examples/images2gif.js) |
 
-    If you specify the -r option twice, unintended frame dropping may occur in some cases.  
-    To prevent dropped frames, replace the first -r option with the -framerate option.  
-    Reference: https://github.com/yihui/animation/issues/74
+## Changelog
 
-    ```
-    ffmpeg -framerate 1 -i input_%04d.png -vcodec libx264 -pix_fmt yuv420p -r 60 output.mp4;
-    ```
-
-### Convert images to GIF
-
-- When converting continuous images such as input_0001.png, input_0002.png, ... to GIF:  
-
-    |Parameter|Description|
-    |--|--|
-    |The first -r|specifies that the image is 1 fps (one image per second).|
-    |The second -r|specifies to output a video at 60 fps (60 images per second). |
-    |-vf scale=512:-1|make the output 512 pixels in height, and adjust width to maintain the aspect ratio.<br>This is common use case for images for the web, which tend to have much smaller resolution than video.<br>If you remove this option, the output GIF has the same height as the input video.|
-
-    ```
-    ffmpeg -framerate 1 -i input_%04d.png -r 60 -vf scale=512:-1 output.gif;
-    ```
-
-## Node.js examples
-
-|Description|Example file|
-|--|--|
-|Convert images to mp4|./examples/nodejs/convert-image-to-mp4.js|
-|Convert images to GIF|./examples/nodejs/convert-image-to-gif.js|
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
-MIT - see [License file](LICENSE.txt).
+
+MIT — see [LICENSE](LICENSE).
 
 ## Author
-Twitter: [@TakuyaMotoshima](https://twitter.com/taaaaaaakuya)  
-Github: [TakuyaMotoshima](https://github.com/takuya-motoshima)  
-mail to: development.takuyamotoshima@gmail.com
+
+- X: [@shumatsumonobu](https://x.com/shumatsumonobu)
+- GitHub: [shumatsumonobu](https://github.com/shumatsumonobu)
+- Email: shumatsumonobu@gmail.com

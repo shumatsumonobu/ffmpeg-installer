@@ -1,0 +1,18 @@
+flowchart TD
+    OS["Detect OS<br/><small>/etc/os-release → yum / dnf / apt</small>"] --> A
+    A["[1/14] Install build dependencies<br/><small>gcc, cmake, git, etc.</small>"] --> B{cmake < 3.5?}
+    B -- Yes --> C["[2/14] Upgrade cmake<br/><small>Build cmake 3.16.9 from source</small>"]
+    C --> D
+    B -- No --> D["[3/14] Install Yasm<br/><small>Assembler</small>"]
+    D --> E["[4/14] Install NASM<br/><small>Assembler</small>"]
+    E --> F["[5/14] Install x264<br/><small>H.264 video encoder</small>"]
+    F --> G["[6/14] Install x265<br/><small>H.265/HEVC video encoder</small>"]
+    G --> H["[7/14] Install fdk-aac<br/><small>AAC audio encoder</small>"]
+    H --> I["[8/14] Install LAME<br/><small>MP3 audio encoder</small>"]
+    I --> J["[9/14] Install Opus<br/><small>Audio encoder</small>"]
+    J --> K["[10/14] Install libogg<br/><small>Ogg container format</small>"]
+    K --> L["[11/14] Install libvorbis<br/><small>Vorbis audio encoder</small>"]
+    L --> M["[12/14] Install libvpx<br/><small>VP8/VP9 video encoder</small>"]
+    M --> N["[13/14] Install libaom<br/><small>AV1 video encoder</small>"]
+    N --> O["[14/14] Build FFmpeg<br/><small>with all encoders enabled</small>"]
+    O --> P["Installation complete!<br/><small>ffmpeg -version</small>"]

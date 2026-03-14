@@ -1,0 +1,11 @@
+flowchart TD
+    A["Uninstall Yasm"] --> B["Uninstall x265"]
+    B --> C["Uninstall LAME"]
+    C --> D["Uninstall Opus"]
+    D --> E["Uninstall libogg"]
+    E --> F["Uninstall libvorbis"]
+    F --> G["Uninstall FFmpeg"]
+    G --> H["Uninstall complete"]
+    H --> I["<small>To fully remove all build artifacts:</small><br/>rm -rf ~/ffmpeg_sources ~/ffmpeg_build ~/bin/ffmpeg ..."]
+
+    style I fill:#fff3cd,stroke:#ffc107

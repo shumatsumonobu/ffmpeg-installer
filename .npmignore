@@ -1,0 +1,15 @@
+# Claude Code configuration
+.claude/
+
+# Dependencies
+node_modules/
+examples/node_modules/
+
+# Example outputs
+examples/outputs/
+
+# Tests
+__tests__/
+
+# Mermaid source files
+screenshots/*.mmd

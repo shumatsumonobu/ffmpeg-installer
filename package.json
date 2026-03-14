@@ -1,33 +1,34 @@
 {
   "name": "ffmpeg-installer",
-  "version": "1.0.1",
-  "description": "This is a shell script that automatically installs FFmpeg.",
-  "directories": {
-    "bin": "bin",
-    "example": "examples",
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "2.0.0",
+  "description": "One-command FFmpeg build from source — installs x264, x265, VP9, AV1, AAC, MP3 and more on CentOS/RHEL so you don't have to.",
+  "files": [
+    "bin/",
+    "examples/",
+    "screenshots/",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/takuya-motoshima/ffmpeg-installer.git"
+    "url": "git+https://github.com/shumatsumonobu/ffmpeg-installer.git"
   },
   "keywords": [
-    "node.js",
-    "node",
-    "nodejs",
     "ffmpeg",
     "installer",
-    "install",
-    "typescript",
-    "shell"
+    "build-from-source",
+    "centos",
+    "rhel",
+    "shell",
+    "x264",
+    "x265",
+    "av1",
+    "video-encoding"
   ],
-  "author": "Takuya Motoshima <developer.takuyamotoshima@gmail.com> (https://twitter.com/taaaaaaakuya)",
+  "author": "shumatsumonobu <shumatsumonobu@gmail.com> (https://x.com/shumatsumonobu)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/takuya-motoshima/ffmpeg-installer/issues"
+    "url": "https://github.com/shumatsumonobu/ffmpeg-installer/issues"
   },
-  "homepage": "https://github.com/takuya-motoshima/ffmpeg-installer#readme"
+  "homepage": "https://github.com/shumatsumonobu/ffmpeg-installer#readme"
 }
